@@ -1,0 +1,19 @@
+Plaintext
+# Node zavisnosti
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Okruženje i tajne
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Sistemski i IDE fajlovi
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
