@@ -1,0 +1,312 @@
+using System;
+using System.Collections.Generic;
+
+namespace PisshStop
+{
+    internal class Program
+    {
+        static List<Toalet> toaleti = new List<Toalet>();
+
+        static void Main(string[] args)
+        {
+            // Primeri toaleta
+            toaleti.Add(new Toalet(
+                "Javni toalet",
+                "Centar grada",
+                true,
+                true,
+                4.5
+            ));
+
+            toaleti.Add(new Toalet(
+                "Toalet u tržnom centru",
+                "Tržni centar",
+                true,
+                true,
+                4.8
+            ));
+
+            toaleti.Add(new Toalet(
+                "Toalet u parku",
+                "Gradski park",
+                false,
+                false,
+                3.9
+            ));
+
+            while (true)
+            {
+                Console.WriteLine("\n================================");
+                Console.WriteLine("          🚽 PISSHSTOP 🚽");
+                Console.WriteLine("================================");
+                Console.WriteLine("1. 🔎 Pronađi toalet");
+                Console.WriteLine("2. 📍 Prikaži sve toalete");
+                Console.WriteLine("3. ➕ Dodaj novi toalet");
+                Console.WriteLine("4. ⭐ Oceni toalet");
+                Console.WriteLine("5. ℹ️ Informacije o toaletu");
+                Console.WriteLine("0. ❌ Izlaz");
+                Console.WriteLine("================================");
+
+                Console.Write("Izaberi opciju: ");
+                string izbor = Console.ReadLine() ?? "";
+
+                if (izbor == "0")
+                {
+                    Console.WriteLine("\nHvala što koristiš PisshStop! 🚽");
+                    break;
+                }
+
+                switch (izbor)
+                {
+                    case "1":
+                        PronadjiToalet();
+                        break;
+
+                    case "2":
+                        PrikaziToalete();
+                        break;
+
+                    case "3":
+                        DodajToalet();
+                        break;
+
+                    case "4":
+                        OceniToalet();
+                        break;
+
+                    case "5":
+                        InformacijeOToaletu();
+                        break;
+
+                    default:
+                        Console.WriteLine("\nTa opcija ne postoji.");
+                        break;
+                }
+            }
+        }
+
+        // =========================
+        // PRONAĐI TOALET
+        // =========================
+
+        static void PronadjiToalet()
+        {
+            Console.Write("\nUnesi lokaciju: ");
+            string lokacija = Console.ReadLine() ?? "";
+
+            bool pronadjen = false;
+
+            Console.WriteLine("\n=== TOALETI U BLIZINI ===");
+
+            foreach (Toalet toalet in toaleti)
+            {
+                if (toalet.Lokacija
+                    .ToLower()
+                    .Contains(lokacija.ToLower()))
+                {
+                    Console.WriteLine(
+                        $"- {toalet.Naziv} | " +
+                        $"Lokacija: {toalet.Lokacija} | " +
+                        $"Ocena: {toalet.Ocena}/5"
+                    );
+
+                    pronadjen = true;
+                }
+            }
+
+            if (!pronadjen)
+            {
+                Console.WriteLine("Nije pronađen nijedan toalet.");
+            }
+        }
+
+        // =========================
+        // PRIKAŽI SVE TOALETE
+        // =========================
+
+        static void PrikaziToalete()
+        {
+            Console.WriteLine("\n=== SVI TOALETI ===");
+
+            if (toaleti.Count == 0)
+            {
+                Console.WriteLine("Trenutno nema dodatih toaleta.");
+                return;
+            }
+
+            for (int i = 0; i < toaleti.Count; i++)
+            {
+                Console.WriteLine(
+                    $"{i + 1}. {toaleti[i].Naziv} | " +
+                    $"{toaleti[i].Lokacija} | " +
+                    $"Ocena: {toaleti[i].Ocena}/5"
+                );
+            }
+        }
+
+        // =========================
+        // DODAJ TOALET
+        // =========================
+
+        static void DodajToalet()
+        {
+            Console.WriteLine("\n=== DODAJ TOALET ===");
+
+            Console.Write("Naziv toaleta: ");
+            string naziv = Console.ReadLine() ?? "";
+
+            Console.Write("Lokacija: ");
+            string lokacija = Console.ReadLine() ?? "";
+
+            Console.Write("Da li je toalet besplatan? (da/ne): ");
+            string besplatanUnos = Console.ReadLine() ?? "";
+
+            bool besplatan = besplatanUnos.ToLower() == "da";
+
+            Console.Write(
+                "Da li je pristupačan osobama sa invaliditetom? (da/ne): "
+            );
+
+            string pristupacnostUnos = Console.ReadLine() ?? "";
+
+            bool pristupacan =
+                pristupacnostUnos.ToLower() == "da";
+
+            toaleti.Add(new Toalet(
+                naziv,
+                lokacija,
+                besplatan,
+                pristupacan,
+                0
+            ));
+
+            Console.WriteLine("\nToalet je uspešno dodat u PisshStop! 🚽");
+        }
+
+        // =========================
+        // OCENI TOALET
+        // =========================
+
+        static void OceniToalet()
+        {
+            PrikaziToalete();
+
+            if (toaleti.Count == 0)
+                return;
+
+            Console.Write("\nIzaberi broj toaleta: ");
+
+            if (!int.TryParse(
+                Console.ReadLine(),
+                out int broj))
+            {
+                Console.WriteLine("Unos nije ispravan.");
+                return;
+            }
+
+            if (broj < 1 || broj > toaleti.Count)
+            {
+                Console.WriteLine("Toalet ne postoji.");
+                return;
+            }
+
+            Console.Write("Unesi ocenu od 1 do 5: ");
+
+            if (!double.TryParse(
+                Console.ReadLine(),
+                out double ocena))
+            {
+                Console.WriteLine("Ocena nije ispravna.");
+                return;
+            }
+
+            if (ocena < 1 || ocena > 5)
+            {
+                Console.WriteLine(
+                    "Ocena mora biti između 1 i 5."
+                );
+                return;
+            }
+
+            toaleti[broj - 1].Ocena = ocena;
+
+            Console.WriteLine(
+                "\nHvala! Toalet je uspešno ocenjen. ⭐"
+            );
+        }
+
+        // =========================
+        // INFORMACIJE O TOALETU
+        // =========================
+
+        static void InformacijeOToaletu()
+        {
+            PrikaziToalete();
+
+            if (toaleti.Count == 0)
+                return;
+
+            Console.Write("\nIzaberi broj toaleta: ");
+
+            if (!int.TryParse(
+                Console.ReadLine(),
+                out int broj))
+            {
+                Console.WriteLine("Unos nije ispravan.");
+                return;
+            }
+
+            if (broj < 1 || broj > toaleti.Count)
+            {
+                Console.WriteLine("Toalet ne postoji.");
+                return;
+            }
+
+            Toalet toalet = toaleti[broj - 1];
+
+            Console.WriteLine("\n=== INFORMACIJE ===");
+            Console.WriteLine($"Naziv: {toalet.Naziv}");
+            Console.WriteLine($"Lokacija: {toalet.Lokacija}");
+
+            Console.WriteLine(
+                $"Besplatan: {(toalet.Besplatan ? "Da" : "Ne")}"
+            );
+
+            Console.WriteLine(
+                $"Pristupačan: {(toalet.Pristupacan ? "Da" : "Ne")}"
+            );
+
+            Console.WriteLine(
+                $"Ocena: {toalet.Ocena}/5"
+            );
+        }
+    }
+
+    // =========================
+    // KLASA TOALET
+    // =========================
+
+    class Toalet
+    {
+        public string Naziv { get; set; }
+        public string Lokacija { get; set; }
+        public bool Besplatan { get; set; }
+        public bool Pristupacan { get; set; }
+        public double Ocena { get; set; }
+
+        public Toalet(
+            string naziv,
+            string lokacija,
+            bool besplatan,
+            bool pristupacan,
+            double ocena)
+        {
+            Naziv = naziv;
+            Lokacija = lokacija;
+            Besplatan = besplatan;
+            Pristupacan = pristupacan;
+            Ocena = ocena;
+        }
+    }
+}
+```
