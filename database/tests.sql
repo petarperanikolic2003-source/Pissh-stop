@@ -69,6 +69,11 @@ BEGIN
     ) THEN
         RAISE EXCEPTION 'Demo payment was not found';
     END IF;
+INSERT INTO users (name, email, password_hash)
+VALUES ('Ana', 'ana@example.com', 'fake_hash_for_testing');
+
+INSERT INTO users (name, email, password_hash)
+VALUES ('Ana 2', 'ANA@example.com', 'another_fake_hash');
 
     RAISE NOTICE 'All database tests passed successfully!';
 END $$;
