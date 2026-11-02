@@ -71,6 +71,3 @@ CREATE INDEX idx_payments_user_id ON payments(user_id);
 CREATE INDEX idx_payments_location_id ON payments(location_id);
 INSERT INTO users (name, email, password_hash)
 VALUES ('Ana', 'ana@example.com', 'fake_hash_for_testing');
-
-INSERT INTO users (name, email, password_hash)
-VALUES ('Ana 2', 'ANA@example.com', 'another_fake_hash');
