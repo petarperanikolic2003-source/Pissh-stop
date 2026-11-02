@@ -1,13 +1,18 @@
 
 CREATE TABLE users (
-    id BIGSERIAL PRIMARY KEY,
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    email VARCHAR(150) UNIQUE NOT NULL,
+    email VARCHAR(255) NOT NULL,
     password_hash TEXT NOT NULL,
-    role VARCHAR(20) NOT NULL DEFAULT 'user'
-        CHECK (role IN ('user', 'admin', 'owner')),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    role VARCHAR(20) NOT NULL DEFAULT 'user',
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT users_role_check
+        CHECK (role IN ('user', 'admin', 'owner'))
 );
+
+CREATE UNIQUE INDEX users_email_unique
+    ON users (LOWER(email));
 
 CREATE TABLE owners (
     id BIGSERIAL PRIMARY KEY,
@@ -64,3 +69,8 @@ CREATE INDEX idx_usage_records_user_id ON usage_records(user_id);
 CREATE INDEX idx_usage_records_location_id ON usage_records(location_id);
 CREATE INDEX idx_payments_user_id ON payments(user_id);
 CREATE INDEX idx_payments_location_id ON payments(location_id);
+INSERT INTO users (name, email, password_hash)
+VALUES ('Ana', 'ana@example.com', 'fake_hash_for_testing');
+
+INSERT INTO users (name, email, password_hash)
+VALUES ('Ana 2', 'ANA@example.com', 'another_fake_hash');
