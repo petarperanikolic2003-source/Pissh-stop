@@ -132,3 +132,13 @@ Probni podaci iz `seed.sql` služe samo za razvoj i testiranje. Vrednost `TEST_H
 Baza podataka projekta Pissh-stop omogućava organizovano čuvanje podataka o korisnicima, vlasnicima i lokacijama, kao i evidenciju recenzija, korišćenja i plaćanja.
 
 Korišćenjem relacionih tabela, ključeva, ograničenja i SQL upita obezbeđuje se povezanost podataka i osnova za dalji razvoj projekta.
+
+## Model korisnika i jedinstvenost naloga
+
+- Svaki korisnik ima jedinstven ID (`id`).
+- Ime korisnika (`name`) je obavezno, ali ne mora biti jedinstveno.
+- Email (`email`) je obavezan i mora biti jedinstven.
+- Email se poredi bez razlikovanja velikih i malih slova.
+- Lozinka se čuva kao hash u polju `password_hash`.
+- Uloga (`role`) može biti `user`, `admin` ili `owner`.
+- Baza sprečava dupliranje email adresa pomoću jedinstvenog indeksa.
