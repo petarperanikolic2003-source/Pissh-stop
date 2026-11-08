@@ -142,3 +142,27 @@ Korišćenjem relacionih tabela, ključeva, ograničenja i SQL upita obezbeđuje
 - Lozinka se čuva kao hash u polju `password_hash`.
 - Uloga (`role`) može biti `user`, `admin` ili `owner`.
 - Baza sprečava dupliranje email adresa pomoću jedinstvenog indeksa.
+
+## Relacije i ograničenja korisničkih podataka
+
+Tabela `users` predstavlja korisnike aplikacije.
+
+### Ograničenja korisnika
+- Svaki korisnik ima jedinstveni ID (`id`).
+- Ime, email i hash lozinke su obavezni.
+- Ime, email i hash lozinke ne smeju biti prazni.
+- Email mora biti jedinstven, bez obzira na velika i mala slova.
+- Uloga korisnika može biti `user`, `admin` ili `owner`.
+
+### Relacije
+- Tabela `reviews` povezana je sa tabelom `users` preko `user_id`.
+- Tabela `usage_records` povezana je sa tabelom `users` preko `user_id`.
+- Tabela `payments` povezana je sa tabelom `users` preko `user_id`.
+- Sve tri tabele povezane su i sa tabelom `locations` preko `location_id`.
+
+### Dodatna pravila
+- `user_id` i `location_id` su obavezni u povezanim tabelama.
+- Korisnik i lokacija moraju postojati da bi se napravila recenzija, evidencija korišćenja ili uplata.
+- Brisanje korisnika ili lokacije nije dozvoljeno dok postoje povezani zapisi.
+- Ocena recenzije mora biti između 1 i 5.
+- Iznos uplate ne može biti negativan.
