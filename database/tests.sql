@@ -1,6 +1,8 @@
-
 DO $$
+DECLARE
+    test_location_id BIGINT;
 BEGIN
+   
     IF to_regclass('public.users') IS NULL
        OR to_regclass('public.owners') IS NULL
        OR to_regclass('public.locations') IS NULL
@@ -10,12 +12,14 @@ BEGIN
         RAISE EXCEPTION 'One or more required tables are missing';
     END IF;
 
+
     IF NOT EXISTS (
         SELECT 1 FROM users
         WHERE email = 'test@example.com'
     ) THEN
         RAISE EXCEPTION 'Demo user was not found';
     END IF;
+
 
     IF NOT EXISTS (
         SELECT 1 FROM locations
@@ -47,6 +51,7 @@ BEGIN
         RAISE EXCEPTION 'Demo review or its relationships are missing';
     END IF;
 
+
     IF NOT EXISTS (
         SELECT 1
         FROM usage_records ur
@@ -57,6 +62,7 @@ BEGIN
     ) THEN
         RAISE EXCEPTION 'Demo usage record was not found';
     END IF;
+
 
     IF NOT EXISTS (
         SELECT 1
@@ -69,11 +75,46 @@ BEGIN
     ) THEN
         RAISE EXCEPTION 'Demo payment was not found';
     END IF;
-INSERT INTO users (name, email, password_hash)
-VALUES ('Ana', 'ana@example.com', 'fake_hash_for_testing');
 
-INSERT INTO users (name, email, password_hash)
-VALUES ('Ana 2', 'ANA@example.com', 'another_fake_hash');
+
+    SELECT id INTO test_location_id
+    FROM locations
+    WHERE name = 'Demo Cafe WC'
+      AND address = 'Glavna 1'
+    LIMIT 1;
+
+
+    BEGIN
+        INSERT INTO users (name, email, password_hash)
+        VALUES ('Test Duplikat', 'TEST@example.com', 'fake_test_hash');
+
+        RAISE EXCEPTION 'Duplicate email was accepted!';
+    EXCEPTION
+        WHEN unique_violation THEN
+            RAISE NOTICE 'SUCCESS: Duplicate email was rejected.';
+    END;
+
+    
+    BEGIN
+        INSERT INTO users (name, email, password_hash)
+        VALUES ('   ', 'emptyname@example.com', 'fake_test_hash');
+
+        RAISE EXCEPTION 'Empty name was accepted!';
+    EXCEPTION
+        WHEN check_violation THEN
+            RAISE NOTICE 'SUCCESS: Empty name was rejected.';
+    END;
+
+
+    BEGIN
+        INSERT INTO reviews (user_id, location_id, rating)
+        VALUES (-999, test_location_id, 5);
+
+        RAISE EXCEPTION 'Non-existing user was accepted!';
+    EXCEPTION
+        WHEN foreign_key_violation THEN
+            RAISE NOTICE 'SUCCESS: Non-existing user was rejected.';
+    END;
 
     RAISE NOTICE 'All database tests passed successfully!';
 END $$;
