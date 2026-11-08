@@ -135,32 +135,30 @@ Korišćenjem relacionih tabela, ključeva, ograničenja i SQL upita obezbeđuje
 
 ## Model korisnika i jedinstvenost naloga
 
-- Svaki korisnik ima jedinstven ID (`id`).
-- Ime korisnika (`name`) je obavezno, ali ne mora biti jedinstveno.
-- Email (`email`) je obavezan i mora biti jedinstven.
-- Email se poredi bez razlikovanja velikih i malih slova.
-- Lozinka se čuva kao hash u polju `password_hash`.
-- Uloga (`role`) može biti `user`, `admin` ili `owner`.
-- Baza sprečava dupliranje email adresa pomoću jedinstvenog indeksa.
-
-## Relacije i ograničenja korisničkih podataka
-
 Tabela `users` predstavlja korisnike aplikacije.
 
-### Ograničenja korisnika
-- Svaki korisnik ima jedinstveni ID (`id`).
-- Ime, email i hash lozinke su obavezni.
+### Podaci o korisniku
+- `id` predstavlja jedinstveni ID korisnika.
+- `name` predstavlja ime korisnika i obavezno je.
+- `email` je obavezan i mora biti jedinstven.
+- `password_hash` čuva hash lozinke, nikada običnu lozinku.
+- `role` određuje ulogu korisnika: `user`, `admin` ili `owner`.
+- `created_at` beleži datum kreiranja naloga.
+
+### Pravila jedinstvenosti i ograničenja
+- Svaki korisnik ima jedinstven ID.
+- Email mora biti jedinstven bez obzira na velika i mala slova.
 - Ime, email i hash lozinke ne smeju biti prazni.
-- Email mora biti jedinstven, bez obzira na velika i mala slova.
-- Uloga korisnika može biti `user`, `admin` ili `owner`.
+- Ime korisnika ne mora biti jedinstveno.
+- Uloga korisnika mora biti jedna od dozvoljenih vrednosti.
 
-### Relacije
-- Tabela `reviews` povezana je sa tabelom `users` preko `user_id`.
-- Tabela `usage_records` povezana je sa tabelom `users` preko `user_id`.
-- Tabela `payments` povezana je sa tabelom `users` preko `user_id`.
-- Sve tri tabele povezane su i sa tabelom `locations` preko `location_id`.
+### Relacije između tabela
+- `reviews` je povezana sa `users` preko `user_id`.
+- `usage_records` je povezana sa `users` preko `user_id`.
+- `payments` je povezana sa `users` preko `user_id`.
+- Sve tri tabele povezane su sa `locations` preko `location_id`.
 
-### Dodatna pravila
+### Dodatna ograničenja
 - `user_id` i `location_id` su obavezni u povezanim tabelama.
 - Korisnik i lokacija moraju postojati da bi se napravila recenzija, evidencija korišćenja ili uplata.
 - Brisanje korisnika ili lokacije nije dozvoljeno dok postoje povezani zapisi.
